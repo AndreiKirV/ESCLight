@@ -1,4 +1,5 @@
 using Leopotam.EcsLite;
+using Leopotam.EcsLite.Di;
 using UnityEngine;
 
 namespace Client 
@@ -15,7 +16,9 @@ namespace Client
             _systems
                 // register your systems here, for example:
                 .Add (new InitMovePlayer ())
+                .Add(new InitEnemiesSystem ())
                 .Add (new RunMovePlayer ())
+                .Add(new TriggerEventSystem())
                 
                 // register additional worlds here, for example:
                 // .AddWorld (new EcsWorld (), "events")
@@ -23,7 +26,8 @@ namespace Client
                 // add debug systems for custom worlds here, for example:
                 // .Add (new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem ("events"))
                 .Add (new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem ())
-#endif
+#endif          
+                .Inject()
                 .Init ();
         }
 
@@ -31,21 +35,16 @@ namespace Client
         {
             // process systems here.
             _systems?.Run ();
+            
         }
 
         void OnDestroy () {
             if (_systems != null) 
-            {
-                // list of custom worlds will be cleared
-                // during IEcsSystems.Destroy(). so, you
-                // need to save it here if you need.
+            {//точко выхода
                 _systems.Destroy ();
                 _systems = null;
             }
             
-            // cleanup custom worlds here.
-            
-            // cleanup default world.
             if (_world != null) {
                 _world.Destroy ();
                 _world = null;
