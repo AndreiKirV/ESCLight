@@ -14,8 +14,10 @@ namespace Client
             foreach (var entity in _filter.Value)
             {
                 ref TriggerEvent triggerEventComp = ref _triggerEventPool.Value.Get(entity);
-                Debug.Log($"TriggerValue = {triggerEventComp.TriggerValue}");
-                _triggerEventPool.Value.Del(entity);
+                //_triggerEventPool.Value.Del(entity); using Leopotam.EcsLite.ExtendedSystems;
+                GameState state = systems.GetShared<GameState>();
+                state.TriggerValue += triggerEventComp.TriggerValue;
+                Debug.Log($"TriggerValue = {state.TriggerValue}");
             }
         }
     }

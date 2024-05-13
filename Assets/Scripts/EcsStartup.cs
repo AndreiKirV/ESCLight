@@ -1,5 +1,6 @@
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
+using Leopotam.EcsLite.ExtendedSystems;
 using UnityEngine;
 
 namespace Client 
@@ -11,8 +12,9 @@ namespace Client
 
         void Start () 
         {
+            GameState state = new GameState();
             _world = new EcsWorld ();
-            _systems = new EcsSystems (_world);
+            _systems = new EcsSystems (_world, state);
             _systems
                 // register your systems here, for example:
                 .Add (new InitMovePlayer ())
@@ -26,7 +28,8 @@ namespace Client
                 // add debug systems for custom worlds here, for example:
                 // .Add (new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem ("events"))
                 .Add (new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem ())
-#endif          
+#endif         
+                .DelHere<TriggerEvent>()//автоудаление добавили
                 .Inject()
                 .Init ();
         }
